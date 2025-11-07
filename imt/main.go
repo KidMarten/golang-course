@@ -16,5 +16,8 @@ func main() {
 	fmt.Scan(&weight)
 
 	IMT := weight / math.Pow(height/100, IMTPower)
-	fmt.Printf("Your IMT: %.2f \n", IMT)
+	result := fmt.Sprintf("Your IMT: %.2f \n", IMT)
+
+	fmt.Print(result)
+
 }

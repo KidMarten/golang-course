@@ -9,6 +9,17 @@ func main() {
 	height, weight := getUserInput()
 	IMT := calculateIMT(height, weight)
 	outputResult(IMT)
+	if IMT < 16 {
+		fmt.Println("You are very skinny")
+	} else if IMT >= 16 && IMT < 18.5 {
+		fmt.Println("You are skinny")
+	} else if IMT >= 18.5 && IMT < 25 {
+		fmt.Println("You are OK")
+	} else if IMT >= 25 && IMT < 30 {
+		fmt.Println("You are obese")
+	} else {
+		fmt.Println("You are fat")
+	}
 }
 
 func outputResult(imt float64) {

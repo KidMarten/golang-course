@@ -3,10 +3,17 @@ package main
 import "fmt"
 
 func main() {
-	const USDToEUR = 0.94
-	const USDToRub = 90.0
+	userInput := getUserInput()
+	fmt.Print(userInput)
+}
 
-	const EURtoRub = USDToRub / USDToEUR
+func getUserInput() string {
+	var userInput string
+	fmt.Scan(&userInput)
+	return userInput
+}
 
-	fmt.Print(EURtoRub)
+func convertValue(number float64, sourceCurrency, targetCurrency string) (convertedCurrency float64) {
+	// TODO: реализовать логику конвертации
+	return
 }

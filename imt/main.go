@@ -7,13 +7,18 @@ import (
 )
 
 func main() {
-
+	// defer - откладывание выполнения функции в конец
+	defer func() {
+		// если произошел recover после panic выведи значение из panic
+		if r := recover(); r != nil {
+			fmt.Println("recover", r)
+		}
+	}() // сразу вывзывает функцию после объявления
 	for {
 		height, weight := getUserInput()
 		IMT, err := calculateIMT(height, weight)
 		if err != nil {
-			fmt.Println(err)
-			continue
+			panic("Param error")
 		}
 		outputResult(IMT)
 		decision := tryAgainRequest()

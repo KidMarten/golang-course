@@ -6,21 +6,30 @@ import (
 )
 
 func main() {
-	height, weight := getUserInput()
-	IMT := calculateIMT(height, weight)
-	outputResult(IMT)
 
-	switch {
-	case IMT < 16:
-		fmt.Println("You are very skinny")
-	case IMT < 18.5:
-		fmt.Println("You are skinny")
-	case IMT < 25:
-		fmt.Println("You are OK")
-	case IMT < 30:
-		fmt.Println("You are obese")
-	default:
-		fmt.Println("You are fat")
+	for {
+		height, weight := getUserInput()
+		IMT := calculateIMT(height, weight)
+		outputResult(IMT)
+
+		switch {
+		case IMT < 16:
+			fmt.Println("You are very skinny")
+		case IMT < 18.5:
+			fmt.Println("You are skinny")
+		case IMT < 25:
+			fmt.Println("You are OK")
+		case IMT < 30:
+			fmt.Println("You are obese")
+		default:
+			fmt.Println("You are fat")
+		}
+		decision := tryAgainRequest()
+		if decision == "yes" {
+			continue
+		} else {
+			break
+		}
 	}
 }
 
@@ -45,4 +54,11 @@ func getUserInput() (float64, float64) {
 	fmt.Scan(&weight)
 
 	return height, weight
+}
+
+func tryAgainRequest() (decision string) {
+	var response string
+	fmt.Print("Do you want to try again? (yes/no)")
+	fmt.Scan(&response)
+	return response
 }

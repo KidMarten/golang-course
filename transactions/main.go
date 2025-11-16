@@ -3,13 +3,31 @@ package main
 import "fmt"
 
 func main() {
-	transactions := [6]int{1, 2, 3, -6, 10, 7}
-	transactionsPartial := transactions[1:5]
-	transactionsNewPartial := transactionsPartial[:1]
-	transactionsNewPartial[0] = 30
 
-	fmt.Println(transactions)
-	fmt.Println(transactionsNewPartial)
-	fmt.Println(len(transactionsPartial), cap(transactionsPartial))
-	fmt.Println(len(transactionsNewPartial), cap(transactionsNewPartial))
+	transactions := []float64{}
+	for {
+		transaction := scanTransaction()
+		if transaction == 0 {
+			break
+		}
+		transactions = append(transactions, transaction)
+	}
+	balance := calculateBalance(transactions)
+	fmt.Println(balance)
+}
+
+func scanTransaction() float64 {
+	var transaction float64
+	fmt.Print("Enter sum (or n to exit): ")
+	fmt.Scan(&transaction)
+	return transaction
+}
+
+func calculateBalance(transactions []float64) float64 {
+	var totalSum float64
+
+	for _, value := range transactions {
+		totalSum += value
+	}
+	return totalSum
 }

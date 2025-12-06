@@ -7,7 +7,8 @@ import (
 type bookmarkMap = map[string]string
 
 func main() {
-	bookmarks := bookmarkMap{}
+
+	bookmarks := make(bookmarkMap)
 Menu:
 	for {
 		input := getMenu()

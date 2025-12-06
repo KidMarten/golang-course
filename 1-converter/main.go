@@ -98,24 +98,20 @@ func convertValue(sourceCurrency string, value float64, targetCurrency string) f
 	const USDToEUR = 0.94
 	const USDToRub = 90.0
 
-	var inUSD float64
-	switch sourceCurrency {
-	case "USD":
-		inUSD = value
-	case "EUR":
-		inUSD = value / USDToEUR
-	case "Rub":
-		inUSD = value / USDToRub
+	toRates := map[string]float64{
+		"USD": 1.0,
+		"EUR": USDToEUR,
+		"Rub": USDToRub,
 	}
 
-	switch targetCurrency {
-	case "USD":
-		return inUSD
-	case "EUR":
-		return inUSD * USDToEUR
-	case "Rub":
-		return inUSD * USDToRub
-	default:
-		return 0
+	fromRates := map[string]float64{
+		"USD": 1.0,
+		"EUR": 1.0 / USDToEUR,
+		"Rub": 1.0 / USDToRub,
 	}
+
+	fromRate := fromRates[sourceCurrency]
+	toRate := toRates[targetCurrency]
+
+	return fromRate * value * toRate
 }

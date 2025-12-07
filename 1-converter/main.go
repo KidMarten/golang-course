@@ -28,7 +28,7 @@ func main() {
 	}
 
 	sourceCurrency, value, targetCurrency := getUserInput()
-	convertedValue := convertValue(toRates, fromRates, sourceCurrency, value, targetCurrency)
+	convertedValue := convertValue(&toRates, &fromRates, sourceCurrency, value, targetCurrency)
 	fmt.Printf("Exchange rate %s/%s is %.2f\n", sourceCurrency, targetCurrency, convertedValue)
 }
 
@@ -111,8 +111,8 @@ func getTargetCurrency(sourceCurrency string) string {
 	}
 }
 
-func convertValue(toRates ratesMap, fromRates ratesMap, sourceCurrency string, value float64, targetCurrency string) float64 {
-	fromRate := fromRates[sourceCurrency]
-	toRate := toRates[targetCurrency]
+func convertValue(toRates *ratesMap, fromRates *ratesMap, sourceCurrency string, value float64, targetCurrency string) float64 {
+	fromRate := (*fromRates)[sourceCurrency]
+	toRate := (*toRates)[targetCurrency]
 	return fromRate * value * toRate
 }

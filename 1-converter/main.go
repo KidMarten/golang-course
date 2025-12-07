@@ -8,10 +8,27 @@ import (
 	"strings"
 )
 
+type ratesMap = map[string]float64
+
 func main() {
 	fmt.Println("__ Currency converter __")
+
+	const USDToEUR = 0.94
+	const USDToRub = 90.0
+
+	toRates := ratesMap{
+		"USD": 1.0,
+		"EUR": USDToEUR,
+		"Rub": USDToRub,
+	}
+	fromRates := ratesMap{
+		"USD": 1.0,
+		"EUR": 1.0 / USDToEUR,
+		"Rub": 1.0 / USDToRub,
+	}
+
 	sourceCurrency, value, targetCurrency := getUserInput()
-	convertedValue := convertValue(sourceCurrency, value, targetCurrency)
+	convertedValue := convertValue(toRates, fromRates, sourceCurrency, value, targetCurrency)
 	fmt.Printf("Exchange rate %s/%s is %.2f\n", sourceCurrency, targetCurrency, convertedValue)
 }
 
@@ -94,24 +111,8 @@ func getTargetCurrency(sourceCurrency string) string {
 	}
 }
 
-func convertValue(sourceCurrency string, value float64, targetCurrency string) float64 {
-	const USDToEUR = 0.94
-	const USDToRub = 90.0
-
-	toRates := map[string]float64{
-		"USD": 1.0,
-		"EUR": USDToEUR,
-		"Rub": USDToRub,
-	}
-
-	fromRates := map[string]float64{
-		"USD": 1.0,
-		"EUR": 1.0 / USDToEUR,
-		"Rub": 1.0 / USDToRub,
-	}
-
+func convertValue(toRates ratesMap, fromRates ratesMap, sourceCurrency string, value float64, targetCurrency string) float64 {
 	fromRate := fromRates[sourceCurrency]
 	toRate := toRates[targetCurrency]
-
 	return fromRate * value * toRate
 }

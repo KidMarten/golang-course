@@ -36,7 +36,7 @@ func getMenu() int {
 
 func createAccount() {
 
-	files.ReadFile()
+	files.ReadFile("data.json")
 
 	login := promptData("enter login")
 	password := promptData("enter pass")
@@ -49,12 +49,6 @@ func createAccount() {
 	}
 	vault := account.NewVault()
 	vault.AddAccount(*myAccount)
-	data, err := vault.ToBytes()
-	if err != nil {
-		fmt.Println("Failed to convert to json")
-	}
-	files.WriteFile(data, "data.json")
-
 }
 
 func promptData(prompt string) string {

@@ -7,9 +7,37 @@ import (
 )
 
 func main() {
+	fmt.Println("__Password manager__")
+Menu:
+	for {
+		input := getMenu()
+		switch input {
+		case 1:
+			createAccount()
+		case 2:
+			findAccount()
+		case 3:
+			deleteAccount()
+		default:
+			break Menu
+		}
+	}
+}
 
-	files.WriteFile("Hello", "file.txt")
+func getMenu() int {
+	var input int
+	fmt.Println("1. Create account")
+	fmt.Println("2. Find account")
+	fmt.Println("3. Delete account")
+	fmt.Println("4. Exit")
+	fmt.Scan(&input)
+	return input
+}
+
+func createAccount() {
+
 	files.ReadFile()
+
 	login := promptData("enter login")
 	password := promptData("enter pass")
 	url := promptData("enter url")
@@ -19,15 +47,14 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	myAccount.OutputPassword()
-	files.ReadFile()
-
-	myAccountWithTS, err := account.NewAccountWithTimeStamp(login, password, url)
+	vault := account.NewVault()
+	vault.AddAccount(*myAccount)
+	data, err := vault.ToBytes()
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Println("Failed to convert to json")
 	}
-	myAccountWithTS.OutputPassword()
+	files.WriteFile(data, "data.json")
+
 }
 
 func promptData(prompt string) string {
@@ -35,4 +62,12 @@ func promptData(prompt string) string {
 	var res string
 	fmt.Scanln(&res)
 	return res
+}
+
+func findAccount() {
+
+}
+
+func deleteAccount() {
+
 }

@@ -11,7 +11,6 @@ func ReadFile(name string) ([]byte, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-	fmt.Println(string(data))
 	return data, nil
 }
 

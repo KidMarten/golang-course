@@ -2,7 +2,6 @@ package main
 
 import (
 	"app/password/account"
-	"app/password/files"
 	"fmt"
 )
 
@@ -35,8 +34,6 @@ func getMenu() int {
 }
 
 func createAccount() {
-
-	files.ReadFile("data.json")
 
 	login := promptData("enter login")
 	password := promptData("enter pass")

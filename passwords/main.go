@@ -9,6 +9,7 @@ import (
 func main() {
 
 	files.WriteFile("Hello", "file.txt")
+	files.ReadFile()
 	login := promptData("enter login")
 	password := promptData("enter pass")
 	url := promptData("enter url")

@@ -15,11 +15,10 @@ func WriteFile(content string, name string) {
 		fmt.Println(err)
 	}
 	_, err = file.WriteString(content)
+	defer file.Close()
 	if err != nil {
-		file.Close()
 		fmt.Println(err)
 		return
 	}
 	fmt.Println("Wirte successful")
-	file.Close()
 }

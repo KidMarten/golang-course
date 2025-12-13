@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/password/account"
+	"app/password/files"
 	"fmt"
 )
 
@@ -17,6 +18,7 @@ func main() {
 		return
 	}
 	myAccount.OutputPassword()
+	files.ReadFile()
 
 	myAccountWithTS, err := account.NewAccountWithTimeStamp(login, password, url)
 	if err != nil {

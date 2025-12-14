@@ -64,3 +64,24 @@ func (vault *Vault) FindAccountsByUrl(url string) []Account {
 	}
 	return accounts
 }
+
+func (vault *Vault) DeleteAccountByUrl(url string) bool {
+	var accounts []Account
+	isDeleted := false
+	for _, acc := range vault.Accounts {
+		isMatched := strings.Contains(acc.Url, url)
+		if !isMatched {
+			accounts = append(accounts, acc)
+			continue
+		}
+		isDeleted = true
+	}
+	vault.Accounts = accounts
+	vault.UpdatedAt = time.Now()
+	data, err := vault.ToBytes()
+	if err != nil {
+		color.Red("Failed to convert json to bytes")
+	}
+	files.WriteFile(data, "data.json")
+	return isDeleted
+}

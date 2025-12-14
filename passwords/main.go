@@ -19,7 +19,7 @@ Menu:
 		case 2:
 			findAccount(vault)
 		case 3:
-			deleteAccount()
+			deleteAccount(vault)
 		default:
 			break Menu
 		}
@@ -58,7 +58,6 @@ func promptData(prompt string) string {
 }
 
 func findAccount(vault *account.Vault) {
-	// URL
 	url := promptData("Enter url")
 	accounts := vault.FindAccountsByUrl(url)
 	if len(accounts) == 0 {
@@ -69,6 +68,12 @@ func findAccount(vault *account.Vault) {
 	}
 }
 
-func deleteAccount() {
-
+func deleteAccount(vault *account.Vault) {
+	url := promptData("Enter url")
+	isDeleted := vault.DeleteAccountByUrl(url)
+	if isDeleted {
+		color.Green("Deleted account")
+	} else {
+		color.Red("Unable to find an account")
+	}
 }

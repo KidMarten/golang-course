@@ -46,12 +46,7 @@ func NewVault() *Vault {
 
 func (vault *Vault) AddAccount(acc Account) {
 	vault.Accounts = append(vault.Accounts, acc)
-	vault.UpdatedAt = time.Now()
-	data, err := vault.ToBytes()
-	if err != nil {
-		color.Red("Failed to convert json to bytes")
-	}
-	files.WriteFile(data, "data.json")
+	vault.save()
 }
 
 func (vault *Vault) FindAccountsByUrl(url string) []Account {
@@ -77,11 +72,15 @@ func (vault *Vault) DeleteAccountByUrl(url string) bool {
 		isDeleted = true
 	}
 	vault.Accounts = accounts
+	vault.save()
+	return isDeleted
+}
+
+func (vault *Vault) save() {
 	vault.UpdatedAt = time.Now()
 	data, err := vault.ToBytes()
 	if err != nil {
 		color.Red("Failed to convert json to bytes")
 	}
 	files.WriteFile(data, "data.json")
-	return isDeleted
 }

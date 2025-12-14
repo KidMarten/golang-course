@@ -4,6 +4,7 @@ import (
 	"app/password/files"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/fatih/color"
@@ -48,7 +49,18 @@ func (vault *Vault) AddAccount(acc Account) {
 	vault.UpdatedAt = time.Now()
 	data, err := vault.ToBytes()
 	if err != nil {
-		color.Red("Failed to convert json to byts")
+		color.Red("Failed to convert json to bytes")
 	}
 	files.WriteFile(data, "data.json")
+}
+
+func (vault *Vault) FindAccountsByUrl(url string) []Account {
+	var accounts []Account
+	for _, acc := range vault.Accounts {
+		isMatched := strings.Contains(acc.Url, url)
+		if isMatched {
+			accounts = append(accounts, acc)
+		}
+	}
+	return accounts
 }

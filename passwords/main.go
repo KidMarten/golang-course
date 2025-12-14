@@ -3,18 +3,21 @@ package main
 import (
 	"app/password/account"
 	"fmt"
+
+	"github.com/fatih/color"
 )
 
 func main() {
 	fmt.Println("__Password manager__")
+	vault := account.NewVault()
 Menu:
 	for {
 		input := getMenu()
 		switch input {
 		case 1:
-			createAccount()
+			createAccount(vault)
 		case 2:
-			findAccount()
+			findAccount(vault)
 		case 3:
 			deleteAccount()
 		default:
@@ -33,7 +36,7 @@ func getMenu() int {
 	return input
 }
 
-func createAccount() {
+func createAccount(vault *account.Vault) {
 
 	login := promptData("enter login")
 	password := promptData("enter pass")
@@ -44,7 +47,6 @@ func createAccount() {
 		fmt.Println(err)
 		return
 	}
-	vault := account.NewVault()
 	vault.AddAccount(*myAccount)
 }
 
@@ -55,8 +57,16 @@ func promptData(prompt string) string {
 	return res
 }
 
-func findAccount() {
-
+func findAccount(vault *account.Vault) {
+	// URL
+	url := promptData("Enter url")
+	accounts := vault.FindAccountsByUrl(url)
+	if len(accounts) == 0 {
+		color.Red("No accounts found")
+	}
+	for _, acc := range accounts {
+		acc.Output()
+	}
 }
 
 func deleteAccount() {

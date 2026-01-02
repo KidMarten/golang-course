@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/password/account"
+	"app/password/files"
 	"fmt"
 
 	"github.com/fatih/color"
@@ -9,7 +10,7 @@ import (
 
 func main() {
 	fmt.Println("__Password manager__")
-	vault := account.NewVault()
+	vault := account.NewVault(files.NewJsonDb("data.json"))
 Menu:
 	for {
 		input := getMenu()
@@ -36,7 +37,7 @@ func getMenu() int {
 	return input
 }
 
-func createAccount(vault *account.Vault) {
+func createAccount(vault *account.VaultWithDb) {
 
 	login := promptData("enter login")
 	password := promptData("enter pass")
@@ -57,7 +58,7 @@ func promptData(prompt string) string {
 	return res
 }
 
-func findAccount(vault *account.Vault) {
+func findAccount(vault *account.VaultWithDb) {
 	url := promptData("Enter url")
 	accounts := vault.FindAccountsByUrl(url)
 	if len(accounts) == 0 {
@@ -68,7 +69,7 @@ func findAccount(vault *account.Vault) {
 	}
 }
 
-func deleteAccount(vault *account.Vault) {
+func deleteAccount(vault *account.VaultWithDb) {
 	url := promptData("Enter url")
 	isDeleted := vault.DeleteAccountByUrl(url)
 	if isDeleted {

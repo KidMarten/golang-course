@@ -3,6 +3,7 @@ package main
 import (
 	"app/password/account"
 	"app/password/files"
+	"app/password/output"
 	"fmt"
 
 	"github.com/fatih/color"
@@ -45,7 +46,7 @@ func createAccount(vault *account.VaultWithDb) {
 
 	myAccount, err := account.NewAccount(login, password, url)
 	if err != nil {
-		fmt.Println(err)
+		output.PrintError(err)
 		return
 	}
 	vault.AddAccount(*myAccount)
@@ -62,7 +63,7 @@ func findAccount(vault *account.VaultWithDb) {
 	url := promptData("Enter url")
 	accounts := vault.FindAccountsByUrl(url)
 	if len(accounts) == 0 {
-		color.Red("No accounts found")
+		output.PrintError("No accounts found")
 	}
 	for _, acc := range accounts {
 		acc.Output()
@@ -75,6 +76,6 @@ func deleteAccount(vault *account.VaultWithDb) {
 	if isDeleted {
 		color.Green("Deleted account")
 	} else {
-		color.Red("Unable to find an account")
+		output.PrintError("Unable to find an account")
 	}
 }

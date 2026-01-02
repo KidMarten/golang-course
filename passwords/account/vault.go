@@ -1,12 +1,10 @@
 package account
 
 import (
+	"app/password/output"
 	"encoding/json"
-	"fmt"
 	"strings"
 	"time"
-
-	"github.com/fatih/color"
 )
 
 type ByteReader interface {
@@ -30,7 +28,7 @@ type Vault struct {
 func (vault *Vault) ToBytes() ([]byte, error) {
 	file, err := json.Marshal(vault)
 	if err != nil {
-		fmt.Println(err)
+		output.PrintError(err)
 		return nil, err
 	}
 	return file, nil
@@ -56,7 +54,7 @@ func NewVault(db Db) *VaultWithDb {
 	var vault Vault
 	err = json.Unmarshal(file, &vault)
 	if err != nil {
-		color.Red("Failed to parse json")
+		output.PrintError("Failed to parse json")
 		return &VaultWithDb{
 			Vault: Vault{
 				Accounts:  []Account{},
@@ -107,7 +105,7 @@ func (vault *VaultWithDb) save() {
 	vault.UpdatedAt = time.Now()
 	data, err := vault.Vault.ToBytes()
 	if err != nil {
-		color.Red("Failed to convert json to bytes")
+		output.PrintError("Failed to convert json to bytes")
 	}
 	vault.db.Write(data)
 }

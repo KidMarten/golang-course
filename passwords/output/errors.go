@@ -19,5 +19,14 @@ func PrintError(value any) {
 
 // generics
 func sum[T int | float32 | float64](a, b T) T {
+	// intValue, ok := a.(int) - не сработает
+	// switch d := a.(type) {case ...} - не сработает
+	// return "1" не сработает, return должен попадать под все типы
+	// нельзя передавать интерфейс (например, error)
 	return a + b
+}
+
+// Generic struct
+type List[T any] struct {
+	elements []T
 }

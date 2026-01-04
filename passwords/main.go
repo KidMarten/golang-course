@@ -14,13 +14,19 @@ func main() {
 	vault := account.NewVault(files.NewJsonDb("data.json"))
 Menu:
 	for {
-		input := getMenu()
+		input := promptData([]string{
+			"1. Create account",
+			"2. Find account",
+			"3. Delete account",
+			"4. Exit",
+			"Choose option",
+		})
 		switch input {
-		case 1:
+		case "1":
 			createAccount(vault)
-		case 2:
+		case "2":
 			findAccount(vault)
-		case 3:
+		case "3":
 			deleteAccount(vault)
 		default:
 			break Menu
@@ -28,21 +34,11 @@ Menu:
 	}
 }
 
-func getMenu() int {
-	var input int
-	fmt.Println("1. Create account")
-	fmt.Println("2. Find account")
-	fmt.Println("3. Delete account")
-	fmt.Println("4. Exit")
-	fmt.Scan(&input)
-	return input
-}
-
 func createAccount(vault *account.VaultWithDb) {
 
-	login := promptData("enter login")
-	password := promptData("enter pass")
-	url := promptData("enter url")
+	login := promptData([]string{"enter login"})
+	password := promptData([]string{"enter pass"})
+	url := promptData([]string{"enter url"})
 
 	myAccount, err := account.NewAccount(login, password, url)
 	if err != nil {
@@ -52,15 +48,21 @@ func createAccount(vault *account.VaultWithDb) {
 	vault.AddAccount(*myAccount)
 }
 
-func promptData(prompt string) string {
-	fmt.Print(prompt + ": ")
+func promptData[T any](prompt []T) string {
+	for i, element := range prompt {
+		if i == len(prompt)-1 {
+			fmt.Printf("%v: ", element)
+		} else {
+			fmt.Println(element)
+		}
+	}
 	var res string
 	fmt.Scanln(&res)
 	return res
 }
 
 func findAccount(vault *account.VaultWithDb) {
-	url := promptData("Enter url")
+	url := promptData([]string{"Enter url"})
 	accounts := vault.FindAccountsByUrl(url)
 	if len(accounts) == 0 {
 		output.PrintError("No accounts found")
@@ -71,7 +73,7 @@ func findAccount(vault *account.VaultWithDb) {
 }
 
 func deleteAccount(vault *account.VaultWithDb) {
-	url := promptData("Enter url")
+	url := promptData([]string{"Enter url"})
 	isDeleted := vault.DeleteAccountByUrl(url)
 	if isDeleted {
 		color.Green("Deleted account")

@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 type FileStorage struct {
@@ -19,7 +21,7 @@ func (storage *FileStorage) Read() ([]byte, error) {
 	if isJSONFile(storage.filename) {
 		data, err := os.ReadFile(storage.filename)
 		if err != nil {
-			fmt.Println(err)
+			color.Yellow(err.Error())
 			return nil, err
 		}
 		return data, nil
@@ -36,13 +38,13 @@ func isJSONFile(filename string) bool {
 func (storage *FileStorage) Write(content []byte) {
 	file, err := os.Create(storage.filename)
 	if err != nil {
-		fmt.Println(err)
+		color.Red("Unable to create file %s", err.Error())
 	}
 	_, err = file.Write(content)
 	defer file.Close()
 	if err != nil {
-		fmt.Println(err)
+		color.Red("Unable to write file %s", err.Error())
 		return
 	}
-	fmt.Println("Wirte successful")
+	color.Green("Wirte successful")
 }

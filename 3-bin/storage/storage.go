@@ -3,7 +3,6 @@ package storage
 import (
 	"app/bin/bins"
 	"encoding/json"
-	"fmt"
 
 	"github.com/fatih/color"
 )
@@ -21,6 +20,7 @@ type Storage struct {
 func NewStorage(dbProvider DbProvider) *Storage {
 	file, err := dbProvider.Read()
 	if err != nil {
+		color.Yellow("No data exists. Creating an empty storage.")
 		return &Storage{
 			DbProvider: dbProvider,
 		}
@@ -28,7 +28,7 @@ func NewStorage(dbProvider DbProvider) *Storage {
 	var binList bins.BinList
 	err = json.Unmarshal(file, &binList)
 	if err != nil {
-		color.Red("Failed to read data from storage")
+		color.Red("Failed to read data from storage. Returning an empty storage.")
 		return &Storage{
 			DbProvider: dbProvider,
 		}
@@ -42,7 +42,7 @@ func NewStorage(dbProvider DbProvider) *Storage {
 func (storage *Storage) ToBytes() ([]byte, error) {
 	file, err := json.Marshal(storage.BinList)
 	if err != nil {
-		fmt.Println(err)
+		color.Red(err.Error())
 		return nil, err
 	}
 	return file, nil
@@ -52,9 +52,10 @@ func (storage *Storage) ToBytes() ([]byte, error) {
 func (storage *Storage) saveBinList() {
 	data, err := storage.ToBytes()
 	if err != nil {
-		color.Red("Failed to convert json to bytes")
+		color.Red("Unable to save bin list. Failed to convert json to bytes")
+	} else {
+		storage.DbProvider.Write(data)
 	}
-	storage.DbProvider.Write(data)
 }
 
 func (storage *Storage) readBinList() (*bins.BinList, error) {

@@ -7,14 +7,17 @@ import (
 	"strings"
 )
 
-func isJSONFile(filename string) bool {
-	ext := filepath.Ext(filename)
-	return strings.ToLower(ext) == ".json"
+type FileStorage struct {
+	filename string
 }
 
-func ReadFile(filename string) ([]byte, error) {
-	if isJSONFile(filename) {
-		data, err := os.ReadFile(filename)
+func NewFileStorage(filename string) *FileStorage {
+	return &FileStorage{filename: filename}
+}
+
+func (storage *FileStorage) Read() ([]byte, error) {
+	if isJSONFile(storage.filename) {
+		data, err := os.ReadFile(storage.filename)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -25,8 +28,13 @@ func ReadFile(filename string) ([]byte, error) {
 	}
 }
 
-func WriteFile(content []byte, name string) {
-	file, err := os.Create(name)
+func isJSONFile(filename string) bool {
+	ext := filepath.Ext(filename)
+	return strings.ToLower(ext) == ".json"
+}
+
+func (storage *FileStorage) Write(content []byte) {
+	file, err := os.Create(storage.filename)
 	if err != nil {
 		fmt.Println(err)
 	}

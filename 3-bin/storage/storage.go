@@ -2,19 +2,45 @@ package storage
 
 import (
 	"app/bin/bins"
-	"app/bin/file"
 	"encoding/json"
 	"fmt"
 
 	"github.com/fatih/color"
 )
 
+type DbProvider interface {
+	Read() ([]byte, error)
+	Write([]byte)
+}
+
 type Storage struct {
-	BinList bins.BinList `json:"bin_list"`
+	DbProvider DbProvider
+	BinList    bins.BinList
+}
+
+func NewStorage(dbProvider DbProvider) *Storage {
+	file, err := dbProvider.Read()
+	if err != nil {
+		return &Storage{
+			DbProvider: dbProvider,
+		}
+	}
+	var binList bins.BinList
+	err = json.Unmarshal(file, &binList)
+	if err != nil {
+		color.Red("Failed to read data from storage")
+		return &Storage{
+			DbProvider: dbProvider,
+		}
+	}
+	return &Storage{
+		DbProvider: dbProvider,
+		BinList:    binList,
+	}
 }
 
 func (storage *Storage) ToBytes() ([]byte, error) {
-	file, err := json.Marshal(storage)
+	file, err := json.Marshal(storage.BinList)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -23,16 +49,16 @@ func (storage *Storage) ToBytes() ([]byte, error) {
 }
 
 // Сохранение bin в виде json в локальном файле
-func (storage *Storage) saveBinList(filename string) {
+func (storage *Storage) saveBinList() {
 	data, err := storage.ToBytes()
 	if err != nil {
 		color.Red("Failed to convert json to bytes")
 	}
-	file.WriteFile(data, filename)
+	storage.DbProvider.Write(data)
 }
 
-func (storage *Storage) readBinList(filename string) (*bins.BinList, error) {
-	file, err := file.ReadFile(filename)
+func (storage *Storage) readBinList() (*bins.BinList, error) {
+	file, err := storage.DbProvider.Read()
 	var binList bins.BinList
 	err = json.Unmarshal(file, &binList)
 	if err != nil {
